@@ -1,0 +1,72 @@
+CREATE TABLE "ANTON".Cars
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    name VARCHAR(100),
+    size DOUBLE default 0 not null,
+    state BOOLEAN default true not null,
+    Date TIMESTAMP,
+    primary key (id)
+);
+
+CREATE TABLE "ANTON".Customers
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	name VARCHAR(100),
+	address VARCHAR(150),
+	phone VARCHAR(20),
+	login VARCHAR(50),
+	password VARCHAR(50),
+	id_district INTEGER,
+	primary key (id)
+);
+
+CREATE TABLE "ANTON".Districts
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	district VARCHAR(100),
+	primary key (id)
+);
+
+CREATE TABLE "ANTON".Goods
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    name VARCHAR(150),
+    size DOUBLE default 0 not null,
+    price DOUBLE default 0 not null,
+    count INTEGER default 0 not null,
+	primary key (id)
+);
+
+CREATE TABLE "ANTON".Orders
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    id_customer INTEGER,
+    date TIMESTAMP,
+    state VARCHAR(50),
+    amount DOUBLE default 0 not null,
+    size DOUBLE default 0 not null,
+    id_district INTEGER,
+    address VARCHAR(150),
+    id_packingList INTEGER,
+	primary key (id)
+);
+
+CREATE TABLE "ANTON".GoodsPositions
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	id_goods INTEGER,
+	id_order INTEGER,
+	count INTEGER default 0 not null,
+	primary key (id)
+);
+
+CREATE TABLE "ANTON".PackingLists
+(
+    id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	size DOUBLE default 0 not null,
+	id_district INTEGER,
+	state VARCHAR(50),
+	firsDate TIMESTAMP,
+	id_car INTEGER,
+	primary key (id)
+);

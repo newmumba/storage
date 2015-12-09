@@ -1,0 +1,8 @@
+.container { max-width: 730px; }
+.buttons{height:40px;position: relative;}
+.button-add{position: absolute; right:20px;}
+.customer-container{padding: 30px 0 10px;}
+.table > tbody > tr > td {border: 0px;}
+.body-container{margin-top: 70px;}
+.button-auth{margin-left: 27px;}
+.form-auth-hrading{margin: 10px 0 40px 0;}
