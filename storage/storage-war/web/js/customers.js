@@ -151,15 +151,15 @@ $(document).ready(function () {
                 });
                 htmlGoodsInOrder  = renderGoodsInOrder(arr);
            }else{
-               htmlGoodsInOrder = 'Нет товаров в заявке'
+               htmlGoodsInOrder = '<p>Нет товаров в заявке</p>'
            }
             html = '<div class="panel panel-default"><div class="panel-heading"><div class ="row">' +
                     '<div><table class="table table-condensed">' + htmlOrderButton + '</table></div>' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + en.id + '">' +
-                    '<div class ="row"><div class="col-xs-12 lolo"></div></div></a></div></div>' +
+                    '<div class ="row button-open-order"><div class="col-xs-12"></div></div></a></div></div>' +
                     '<div id="collapse' + en.id + '" class="panel-collapse collapse"><div class="panel-body">' +
-                    htmlGoodsInOrder +
-                    '</div></div></div>' + html; 
+                    htmlGoodsInOrder + 
+                    '<button type="button button-add-good-in-order" class="btn btn-primary">Добавить</button></div></div></div>' + html; 
         });
         /*html = '<table class="table table-condense"><thead><tr><th>Номер</th><th>Дата</th><th>Состояние</th><th>Район</th><th>Адрес</th><th>Сумма</th><th>Размер</th><th></th><th></th><tr></thead><tbody>' +
                 html +'</tbody></table>';*/
@@ -174,11 +174,14 @@ $(document).ready(function () {
         var goodString = '';
         arr.forEach(function(en) {
             console.log(en);
-            goodString = '<tr><td>' + en.id + '</td><td>' + en.count + 
-                    '</td><td>' + en.idGoods.goodSize + '</td><td>' + en.idGoods.name + '</td><td>' + en.idGoods.price + '</td></tr>' + goodString;
+            goodString = '<tr><td>' + en.idGoods.name + '</td><td>' + en.count + 
+                    '</td><td>' + en.idGoods.goodSize + '</td><td>' + en.idGoods.price + '</td><td>' + (en.idGoods.price * en.count) + '</td>'+
+                    '<td><span class="glyphicon glyphicon-pencil button-change-good-in-order" data-toggle="modal" data-target="#modal-order"></span></td>' + 
+                    '<td><span class="glyphicon glyphicon-trash button-delete-good-in-order" data-toggle="modal" data-target=".bs-example-modal-sm"></span></td</tr>'+
+                    '</tr>' + goodString;
         });
-        console.log(goodString);
-        html = '<table class="table table-condensed"><thead><tr><th>ID</th><th>Кол-во</th><th>Размер</th><th>Товар</th><th>Цена</th></tr></thead><tbody>' + goodString + '</tbody></table>';
+        html = '<table class="table table-condensed"><thead><tr><th>Товар</th><th>Кол-во</th><th>Размер</th><th>Цена</th><th>Сумма</th><th></th><th></th></tr></thead><tbody>' + goodString + 
+                '</tbody></table>';
         return html;
     }
     

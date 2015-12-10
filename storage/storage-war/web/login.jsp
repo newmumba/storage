@@ -8,13 +8,13 @@
         <h2 class="form-signin-heading form-auth-hrading">Введите логин и пароль</h2>
     </div>
     <div class="form-group">
-        <label for="login" class="col-sm-3 control-label">Размер</label>
+        <label for="login" class="col-sm-3 control-label">Логин</label>
         <div class="col-sm-6">
             <input type="text" class="form-control" placeholder="Login" id="login" required autofocus>
         </div>
     </div>
     <div class="form-group">
-        <label for="password" class="col-sm-3 control-label">Цена</label>
+        <label for="password" class="col-sm-3 control-label">Пароль</label>
         <div class="col-sm-6">
             <input type="password" class="form-control" placeholder="Password" id="password" required>
         </div>
