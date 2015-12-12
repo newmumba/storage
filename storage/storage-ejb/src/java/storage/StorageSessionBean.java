@@ -115,8 +115,13 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     public Customers getCustomerById(int id) {
         Query query = em.createNamedQuery("Customers.findById");
         query.setParameter("id", id);
-        Customers customer = (Customers) query.getResultList().get(0);
-        return customer;
+        if(!query.getResultList().isEmpty()){
+            Customers customer = (Customers) query.getResultList().get(0);
+            return customer;
+        } else
+        {
+            return null;
+        }
     }
 
     @Override
@@ -179,29 +184,6 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     
     @Override
     public List<Orders> findOrdersByCustomerId(int id) {
-        /*
-        Goodspositions gp = new Goodspositions();
-        gp.setCount(10);
-        List<Goodspositions> lgp = new ArrayList<Goodspositions>();
-        lgp.add(gp);
-        em.persist(gp);
-        Orders o = new Orders();
-        o.setGoodspositions(lgp);
-        em.persist(o);*/
-        
-       /* //Query query1 = em.createNamedQuery("Goodspositions.findById");
-        //query1.setParameter("id", 1);
-        Goodspositions go = new  Goodspositions();//(Goodspositions) query1.getResultList().get(0);
-        
-        Query query2 = em.createNamedQuery("Orders.findById");
-        query2.setParameter("id", 9);
-        Orders go1 = (Orders) query2.getResultList().get(0);
-        
-        //go1.getGoodspositions().remove(go);
-        go.setCount(1);
-        go1.getGoodspositions().add(go);
-        em.persist(go1);
-        */
         
         Query query = em.createNamedQuery("Orders.findByIdCustomers");
         query.setParameter("customerId", id);
@@ -253,8 +235,36 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     }
     
     //Goodspositions
-    public Orders addGoodspositionsInOrder(Goodspositions goodsposition, Orders order) {
-        
+    @Override
+    public Orders addGoodspositionsInOrder(InputGoodspositions inputGP) {
+        Orders order = (Orders) getOrderById(inputGP.getOrderId());
+        if(order.getIdCustomer().getId() == inputGP.getCustomerId()){  //заявка пренадлежит пользователю
+            Goods good = (Goods) getGoodById(inputGP.getGoodId());
+            Goodspositions gp = new Goodspositions(good, inputGP.getCount());
+            List<Goodspositions> lgp = order.getGoodspositions();
+            lgp.add(gp);
+            double size = 0.0, amount = 0.0;
+            for (int i = 0; i < lgp.size(); i++) {
+                Goodspositions iterGP = lgp.get(i);
+                if(iterGP.getIdGoods() != null){
+                    size += iterGP.getIdGoods().getGoodSize() *  iterGP.getCount();
+                    amount += iterGP.getIdGoods().getPrice() *  iterGP.getCount();
+                }
+                
+            }
+            order.setAmount(amount);
+            order.setSize(size);
+            order.setGoodspositions(lgp);
+            em.persist(order);
+        }
         return order;
+//        Goodspositions gp = new Goodspositions();
+//        gp.setCount(10);
+//        List<Goodspositions> lgp = new ArrayList<Goodspositions>();
+//        lgp.add(gp);
+//        //em.persist(gp);
+//        Orders o = getOrderById(22);
+//        o.setGoodspositions(lgp);
+//        em.persist(o);
     }
 }

@@ -1,10 +1,24 @@
 $(document).ready(function () {
-    var pathCustomers = "http://localhost:8080/storage-war/api/customers";
+    var pathCustomers = "http://localhost:8080/storage-war/api/user";
     var pathOrders = "http://localhost:8080/storage-war/api/orders";
     var pathDistricts = "http://localhost:8080/storage-war/api/districts";
-    var customerId = '1';
-    
-    //Кнопка "Добавить"
+    var pathGoods = "http://localhost:8080/storage-war/api/goods";
+    var pathGP = "http://localhost:8080/storage-war/api/gp";
+    var customerId = getUserId();
+
+    function getUserId() {
+        var params = location.search.substring(1).split("&");
+        var GET = {};
+        for (var i = 0; i < params.length; i++) {
+            var getVar = params[i].split("=");
+            if (getVar[0] === "id"){
+                return getVar[1];
+            }
+        }
+        return '';
+    }
+  
+    //Кнопка "Добавить" заявку
     $('.button-add-order').click(function() {
         var buttonContext = $('.button-add-order').attr('button-context');
         if (buttonContext === 'add') {
@@ -19,12 +33,27 @@ $(document).ready(function () {
         }
     });
     
+    //Кнопка "Добавить" товар
+    $('.button-add-good').click(function() {
+        var buttonContext = $('.button-add-good').attr('button-context');
+        if (buttonContext === 'add') {
+            createGoodInOrder();
+            $('.button-default-add').click();
+        } else if (buttonContext === 'change') {
+            changeGoodInOrder();
+            $('.button-default-add').click();
+        } else {
+            $('.button-default-add').click();
+        }
+    });
+    
     $('.button-order').click(function() {
         $('#order-address').val($('tr .customer-address').html());
         $('#orderModalLabel').html("Добавление заявки");
         $('.button-add-order').html("Добавить");
         $('.button-add-order').attr("button-context", "add");
     });
+    
     
     function getCustomerById(customerId) {
         $.ajax({
@@ -33,12 +62,12 @@ $(document).ready(function () {
                 'Content-Type': 'application/json'
             },
             'type': 'GET',
-            'url': pathCustomers,
+            'url': pathCustomers + '/' + customerId,
             'data': customerId,
             'dataType': 'json',
             'success': function(data) {
                 if(data){
-                    renderCustomer(data.customers);
+                    renderCustomer(data);
                     getOrdersByCustomer(customerId);
                 }else{
                     $('.customers-all').html("<p>Пользователь не найден</p>");
@@ -59,10 +88,44 @@ $(document).ready(function () {
                 'Content-Type': 'application/json'
             },
             'type': 'POST',
-            'url': pathOrders,
+            'url': pathOrders + '/add/' + customerId,
             'data': JSON.stringify(newOrder),
             'dataType': 'json',
             'success': function(data) {
+            }
+        });
+    }
+    
+    function createGoodInOrder() {
+        var newGoodInOrder = {
+            'orderId': $('.button-add-good').attr('order-id'),
+            'goodId': $('.select-goods').val(),
+            'customerId': customerId,
+            'count' : $('#good-count').val()
+        };
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'POST',
+            'url': pathGP,
+            'data': JSON.stringify(newGoodInOrder),
+            'dataType': 'json',
+            'success': function(data) {
+                if(data){
+                    console.log(data);
+                    if(data.goodspositions && data.id){
+                        var divId = '#collapse' + data.id;
+                        data.goodspositions = !(data.goodspositions instanceof Array) ? [data.goodspositions] : data.goodspositions;
+                        var arr = data.goodspositions.map(function(goodsposition) {
+                            return goodsposition;
+                        });
+                        $(divId).find('.table-goods-in-order').html(renderGoodsInOrder(arr));
+                    }
+                    (data.size) ? $('tr[order-id=' + data.id + ']').find('.order-size').html(data.size) : '';
+                    (data.amount) ? $('tr[order-id=' + data.id + ']').find('.order-amount').html(data.amount) : '';
+                }
             }
         });
     }
@@ -79,7 +142,6 @@ $(document).ready(function () {
             'dataType': 'json',
             'success': function(data) {
                 if(data){
-                    console.log(data);
                     data.orders = !(data.orders instanceof Array) ? [data.orders] : data.orders;
                     var arr = data.orders.map(function(order) {
                         return order;
@@ -108,15 +170,14 @@ $(document).ready(function () {
             'data': JSON.stringify(changeOrder),
             'dataType': 'json',
             'success': function(data) {
-                console.log(data);
                 $('.button-default-add').click();
                 $('#order-address').val("");
 
-                //получаем новую строку товара
+                //получаем новую строку заявки
                 var html = getHtmlOrderString(data);
-                //удаляем инфу о товаре
+                //удаляем инфу о заявке
                 $('tr[order-id=' + orderId + ']').children("td:lt(7)").remove();
-                //заменяем строку товара на новую
+                //заменяем строку заявки на новую
                 $('tr[order-id=' + orderId + ']').prepend(html);
             }
         });
@@ -157,25 +218,23 @@ $(document).ready(function () {
                     '<div><table class="table table-condensed">' + htmlOrderButton + '</table></div>' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + en.id + '">' +
                     '<div class ="row button-open-order"><div class="col-xs-12"></div></div></a></div></div>' +
-                    '<div id="collapse' + en.id + '" class="panel-collapse collapse"><div class="panel-body">' +
+                    '<div id="collapse' + en.id + '" class="panel-collapse collapse"><div class="panel-body"><div class="table-goods-in-order">' +
                     htmlGoodsInOrder + 
-                    '<button type="button button-add-good-in-order" class="btn btn-primary">Добавить</button></div></div></div>' + html; 
+                    '</div><button order-id="' + en.id + '" class="btn btn-primary button-good" data-toggle="modal" data-target="#modal-good">Добавить</button></div></div></div>' + html; 
         });
-        /*html = '<table class="table table-condense"><thead><tr><th>Номер</th><th>Дата</th><th>Состояние</th><th>Район</th><th>Адрес</th><th>Сумма</th><th>Размер</th><th></th><th></th><tr></thead><tbody>' +
-                html +'</tbody></table>';*/
-
         $('.orders-all').html(html);
         addClick();
     }
     
     function renderGoodsInOrder(arr) {
-        console.log(arr);
         var html = '';
         var goodString = '';
         arr.forEach(function(en) {
-            console.log(en);
-            goodString = '<tr><td>' + en.idGoods.name + '</td><td>' + en.count + 
-                    '</td><td>' + en.idGoods.goodSize + '</td><td>' + en.idGoods.price + '</td><td>' + (en.idGoods.price * en.count) + '</td>'+
+            goodString = '<tr><td>' + ((en.idGoods) ? ((en.idGoods.name) ? en.idGoods.name : '') : '') + 
+                    '</td><td>' + ((en.count) ? en.count : '') + 
+                    '</td><td>' + ((en.idGoods) ? ((en.idGoods.goodSize) ? en.idGoods.goodSize :'') : '') + 
+                    '</td><td>' + ((en.idGoods) ? ((en.idGoods.price) ? en.idGoods.price :'') : '') + 
+                    '</td><td>' + ((en.idGoods && en.count) ? ((en.idGoods.price && en.count) ? (en.idGoods.price * en.count) : '') : '')  + '</td>'+
                     '<td><span class="glyphicon glyphicon-pencil button-change-good-in-order" data-toggle="modal" data-target="#modal-order"></span></td>' + 
                     '<td><span class="glyphicon glyphicon-trash button-delete-good-in-order" data-toggle="modal" data-target=".bs-example-modal-sm"></span></td</tr>'+
                     '</tr>' + goodString;
@@ -197,12 +256,12 @@ $(document).ready(function () {
                 '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state === 1 ?'На рассмотрении': (en.state === 2 ?'Принята': (en.state === 3 ?'Доставка': 'Открыта'))) + 
                 htmlDistrict + 
                 '</td><td class = "order-address">' + ((en.address) ? en.address : '') + 
-                '</td><td>' + ((en.amount) ? en.amount : '') + 
-                '</td><td>' + ((en.size) ? en.size : '') + '</td>';
+                '</td><td class="order-amount">' + ((en.amount) ? en.amount : '') + 
+                '</td><td  class="order-size">' + ((en.size) ? en.size : '') + '</td>';
         return html;
     }
     
-    function renderDistricts(arr){;
+    function renderDistricts(arr){
         var html = '';
         arr.forEach(function(en) {
             html =  html + '<option value="' + en.id + '">' + en.district + '</option>';
@@ -210,6 +269,13 @@ $(document).ready(function () {
         $('.select-district').html(html);
     }
     
+    function renderGoods(arr){
+        var html = '';
+        arr.forEach(function(en) {
+            html = html + '<option value="' + en.id + '">' + en.name + ' <i class="test">(' + en.price + ' руб.)</i></option>';
+        });
+        $('.select-goods').html(html);
+    }
     function getDistricts() {
         $.ajax({
             headers: {
@@ -232,6 +298,28 @@ $(document).ready(function () {
         });
     }
     
+    function getGoods(){
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'GET',
+            'url': pathGoods,
+            'dataType': 'json',
+            'success': function(data) {
+                if (data) {
+                    data.goods = !(data.goods instanceof Array) ? [data.goods] : data.goods;
+                    var arr = data.goods.map(function(good) {
+                        return good;
+                    });
+                    renderGoods(arr);
+                } else {
+                }
+            }
+        });
+    }
+    
     function addClick(){
         $('.button-change-order').click(function() {
             var districtId = $(this).parents("tr").children(".order-district-id").attr("district-id");
@@ -243,10 +331,20 @@ $(document).ready(function () {
             $('.button-add-order').attr("button-context", "change");
             $('.button-add-order').attr("order-id", orderId);
         });
+        
+        $('.button-good').click(function() {
+            var headerForm = "Добавление товара в заявку № " + $(this).attr("order-id");
+            $('#goodModalLabel').html(headerForm);
+            $('.button-add-good').html("Добавить");
+            $('.button-add-good').attr("button-context", "add");
+            $('.button-add-good').attr("order-id", $(this).attr("order-id"));
+        });
     }
     
     //получаем все районы
     getDistricts();
+    //получаем все товары
+    getGoods();
     //получаем данные пользователя
     getCustomerById(customerId);
 });

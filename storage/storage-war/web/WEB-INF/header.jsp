@@ -25,7 +25,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="goods.jsp">Товары</a></li>
                         <li><a href="cars.jsp">Машины</a></li>
-                        <li><a href="customers.jsp">Пользователь</a></li>
+                        <li><a href="user.jsp">Пользователь</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="login.jsp?#">Войти</a></li>

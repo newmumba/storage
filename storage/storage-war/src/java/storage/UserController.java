@@ -14,12 +14,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("/customers")
-public class CustomersController {
+@Path("/user")
+public class UserController {
     
     StorageSessionBeanRemote customerBean;
 
-    public CustomersController() throws NamingException {
+    public UserController() throws NamingException {
         InitialContext ic = new InitialContext();
         customerBean = (StorageSessionBeanRemote) ic.lookup("storage.StorageSessionBeanRemote");
     }
@@ -27,7 +27,6 @@ public class CustomersController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Customers> getCustomers() throws NamingException{
-        System.out.print(123);
          return customerBean.findCustomers();
     }
     
@@ -37,7 +36,7 @@ public class CustomersController {
         customerBean.addCustomer(customer);
     }
     
-    @POST
+    @GET
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Customers getCustomerById(@PathParam("id") String id) throws NamingException{

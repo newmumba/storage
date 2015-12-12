@@ -4,7 +4,7 @@
 <ul>
     <li><a href="goods.jsp">Товары</a></li>
     <li><a href="cars.jsp">Машины</a></li>
-    <li><a href="customers.jsp">Пользователь</a></li>
+    <li><a href="user.jsp">Пользователь</a></li>
 </ul> 
 <jsp:include page="/WEB-INF/footer.jsp" />
 </body>

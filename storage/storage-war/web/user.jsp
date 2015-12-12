@@ -48,9 +48,41 @@
 </div>
 
 
-
+<!-- Modal-Goods-in-Order -->
+<div class="modal fade" id="modal-good" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="goodModalLabel">Добавление товара в заявку</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="select-goods" class="col-sm-2 control-label">Товар</label>
+                        <div class="col-sm-10">
+                            <select class="form-control select-goods">
+                                <option>Ошибка!</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="good-count" class="col-sm-2 control-label">Количество</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="good-count">
+                        </div>
+                    </div>   
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default button-default-add" data-dismiss="modal">Отмена</button>
+                <button type="button" button-context="add" order-id="" class="btn btn-primary button-add-good">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <jsp:include page="/WEB-INF/footer.jsp" />
-<script src="js/customers.js"></script>
+<script src="js/user.js"></script>
 </body>
 </html>

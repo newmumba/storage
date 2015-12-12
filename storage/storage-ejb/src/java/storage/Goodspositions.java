@@ -49,6 +49,11 @@ public class Goodspositions implements Serializable {
         this.count = count;
     }
 
+    public Goodspositions(Goods good, int count) {
+        this.good = good;
+        this.count = count;        
+    }
+    
     public Integer getId() {
         return id;
     }

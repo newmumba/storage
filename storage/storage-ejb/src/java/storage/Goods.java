@@ -148,5 +148,4 @@ public class Goods implements Serializable {
     public String toString() {
         return "storage.Goods[ id=" + id + " ]";
     }
-    
 }
