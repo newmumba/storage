@@ -82,6 +82,24 @@
     </div>
 </div>
 
+<!-- Modal-Delete-Order -->
+<div id="modal-delete-order" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="deleteOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="mySmallModalLabel">Удаление заявки</h4>
+            </div>
+            <div class="modal-body">
+                Точно удалить заявку?
+                <button type="button" class="btn btn-default button-default-delete" data-dismiss="modal">Нет</button>
+                <button button-order-id="" type="button" class="btn btn-primary button-delete-order-yes">Да</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <jsp:include page="/WEB-INF/footer.jsp" />
 <script src="js/user.js"></script>
 </body>

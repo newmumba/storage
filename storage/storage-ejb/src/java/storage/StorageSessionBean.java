@@ -258,13 +258,5 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
             em.persist(order);
         }
         return order;
-//        Goodspositions gp = new Goodspositions();
-//        gp.setCount(10);
-//        List<Goodspositions> lgp = new ArrayList<Goodspositions>();
-//        lgp.add(gp);
-//        //em.persist(gp);
-//        Orders o = getOrderById(22);
-//        o.setGoodspositions(lgp);
-//        em.persist(o);
     }
 }

@@ -54,6 +54,11 @@ $(document).ready(function () {
         $('.button-add-order').attr("button-context", "add");
     });
     
+    $('.button-delete-order-yes').click(function() {
+        var orderId = $(this).attr("button-order-id");
+        if (orderId !== "")
+            delOrder(orderId);
+    });
     
     function getCustomerById(customerId) {
         $.ajax({
@@ -183,6 +188,27 @@ $(document).ready(function () {
         });
     }
     
+    //delete order
+    function delOrder(orderId) {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'DELETE',
+            'url': pathOrders,
+            'data': orderId,
+            'dataType': 'json',
+            'success': function(data) {
+                //удаляем инфу о заявке
+                var divOrder = '.panel-order-' + orderId;
+                $(divOrder).remove();
+                //закрываем модальное окно
+                $('.button-default-delete').click();
+            }
+        });
+    }
+    
     //print one customer
     function renderCustomer(customer) {
         var html = '';
@@ -202,7 +228,7 @@ $(document).ready(function () {
             var orderString = getHtmlOrderString(en);
             var htmlOrderButton = '<tr class="order-string" order-id="' + en.id + '">' + orderString +
                     '<td><span class="glyphicon glyphicon-pencil button-change-order" data-toggle="modal" data-target="#modal-order"></span></td>' + 
-                    '<td><span class="glyphicon glyphicon-trash button-delete-order" data-toggle="modal" data-target=".bs-example-modal-sm"></span></td</tr>';
+                    '<td><span class="glyphicon glyphicon-trash button-delete-order" data-toggle="modal" data-target="#modal-delete-order"></span></td</tr>';
                     //(en.goodspositions ? '<tr><td colspan="2"></td><td colspan="2">' + en.goodspositions.id + '</td><td colspan="2">' + en.goodspositions.count + '</td><td colspan="2">' + en.goodspositions.idGoods.name + '</td><td colspan="1">' + en.goodspositions.idGoods.goodSize + '</td></tr>':'');
             
            if(en.goodspositions){
@@ -214,7 +240,7 @@ $(document).ready(function () {
            }else{
                htmlGoodsInOrder = '<p>Нет товаров в заявке</p>'
            }
-            html = '<div class="panel panel-default"><div class="panel-heading"><div class ="row">' +
+            html = '<div class="panel panel-default panel-order-' + en.id + '"><div class="panel-heading"><div class ="row">' +
                     '<div><table class="table table-condensed">' + htmlOrderButton + '</table></div>' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + en.id + '">' +
                     '<div class ="row button-open-order"><div class="col-xs-12"></div></div></a></div></div>' +
@@ -338,6 +364,11 @@ $(document).ready(function () {
             $('.button-add-good').html("Добавить");
             $('.button-add-good').attr("button-context", "add");
             $('.button-add-good').attr("order-id", $(this).attr("order-id"));
+        });
+        
+        $('.button-delete-order').click(function() {
+            orderId = $(this).parents("tr").attr('order-id');
+            $(".button-delete-order-yes").attr("button-order-id", orderId);
         });
     }
     
