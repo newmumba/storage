@@ -56,6 +56,13 @@ public class OrdersController {
     }
     
     @POST
+    @Path("/accept/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Orders> acceptOrder(String orderId) throws NamingException {
+        return ordersBean.acceptOrder(Integer.valueOf(orderId));
+    }
+    
+    @POST
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Orders getOrderById(@PathParam("id") String id) throws NamingException{

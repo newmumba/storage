@@ -6,14 +6,20 @@ package storage;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Packinglists.findAll", query = "SELECT p FROM Packinglists p"),
     @NamedQuery(name = "Packinglists.findById", query = "SELECT p FROM Packinglists p WHERE p.id = :id"),
+    @NamedQuery(name = "Packinglists.findOpenByIdDistrict", query = "SELECT p FROM Packinglists p WHERE p.idDistrict = :idDistrict AND p.state = 0"),
     @NamedQuery(name = "Packinglists.findByPlSize", query = "SELECT p FROM Packinglists p WHERE p.plSize = :plSize"),
     @NamedQuery(name = "Packinglists.findByIdDistrict", query = "SELECT p FROM Packinglists p WHERE p.idDistrict = :idDistrict"),
     @NamedQuery(name = "Packinglists.findByState", query = "SELECT p FROM Packinglists p WHERE p.state = :state"),
@@ -47,17 +54,19 @@ public class Packinglists implements Serializable {
     @NotNull
     @Column(name = "PL_SIZE")
     private double plSize;
-    @Column(name = "ID_DISTRICT")
-    private Integer idDistrict;
-    @Size(max = 50)
+    @ManyToOne
+    @JoinColumn(name = "PACKINGLISTS_DISTRICT_ID", referencedColumnName = "DISTRICT_ID")
+    private Districts idDistrict;
     @Column(name = "STATE")
-    private String state;
+    private Integer state;
     @Column(name = "FIRSDATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date firsdate;
     @Column(name = "ID_CAR")
     private Integer idCar;
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Orders> orders;
+    
     public Packinglists() {
     }
 
@@ -86,19 +95,19 @@ public class Packinglists implements Serializable {
         this.plSize = plSize;
     }
 
-    public Integer getIdDistrict() {
+    public Districts getIdDistrict() {
         return idDistrict;
     }
 
-    public void setIdDistrict(Integer idDistrict) {
+    public void setIdDistrict(Districts idDistrict) {
         this.idDistrict = idDistrict;
     }
 
-    public String getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 
@@ -118,6 +127,14 @@ public class Packinglists implements Serializable {
         this.idCar = idCar;
     }
 
+    public List<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Orders> orders) {
+        this.orders = orders;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

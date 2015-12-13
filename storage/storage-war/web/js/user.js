@@ -270,12 +270,14 @@ $(document).ready(function () {
             'data': orderId,
             'dataType': 'json',
             'success': function(data) {
-                console.log(data);
                 if (data) {
-                    renderCustomer(data);
-                    getOrdersByCustomer(customerId);
+                    data.orders = !(data.orders instanceof Array) ? [data.orders] : data.orders;
+                    var arr = data.orders.map(function(order) {
+                        return order;
+                    });
+                    renderOrders(arr);
                 } else {
-                    $('.customers-all').html("<p>Пользователь не найден</p>");
+                    $('.orders-all').html("<p>Нет заявок</p>");
                 }
                 //закрываем модальное окно
                 $('.button-default-send').click();
@@ -347,7 +349,6 @@ $(document).ready(function () {
                     '<td><span class="glyphicon glyphicon-pencil button-change-order" data-toggle="modal" data-target="#modal-order"></span></td>' + 
                     '<td><span class="glyphicon glyphicon-trash button-delete-order" data-toggle="modal" data-target="#modal-delete-order"></span></td>'+
                     '<td><span class="glyphicon glyphicon-send button-send" data-toggle="modal" data-target="#modal-send-order"></span></td></tr>';
-
            if(en.goodspositions){
                 en.goodspositions = !(en.goodspositions instanceof Array) ? [en.goodspositions] : en.goodspositions;
                 var arr = en.goodspositions.map(function(goodsposition) {

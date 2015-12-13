@@ -208,6 +208,17 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     }
     
     @Override
+    public List<Orders> acceptOrder(int id) {
+        Orders order = getOrderById(id);
+        if (order.getState() == 1) {
+            order.setState(2);
+        }
+        addOrderInPackinglist(order);
+        em.persist(order);
+        return findOrdersSent();
+    }
+    
+    @Override
     public void addOrder(InputOrder inputOrder) {
         Districts district = (Districts) getDistrictById(inputOrder.getDistrictId());
         Customers customer = (Customers) getCustomerById(inputOrder.getCustomerId());
@@ -250,6 +261,30 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         em.remove((Orders) getOrderById(id));
     }
     
+    @Override
+    public void addOrderInPackinglist(Orders order){
+        Districts district = order.getIdDistrict();
+        Packinglists pl; 
+        List lpl = findOpenPackinglistsByDistrict(district);
+        if(lpl.isEmpty()){
+            pl = addPackinglist(district);
+        }else{
+            pl = (Packinglists) lpl.get(0);
+        }
+        List lOrders = pl.getOrders();
+        if(lOrders != null){
+            lOrders.add(order);
+        }else{
+            List<Orders> orders = new ArrayList<Orders>();
+            orders.add(order);
+            lOrders = orders;
+        }
+        pl.setOrders(lOrders);
+        pl = reCountPackinglist(pl);
+        em.persist(pl);
+    }
+
+    
     //Goodspositions
     @Override
     public Orders addGoodspositionsInOrder(InputGoodspositions inputGP) {
@@ -260,7 +295,7 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
             List<Goodspositions> lgp = order.getGoodspositions();
             lgp.add(gp);
             order.setGoodspositions(lgp);
-            reCountOrder(order);
+            order = reCountOrder(order);
             em.persist(order);
         }
         return order;
@@ -320,6 +355,26 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         return order;
     }
     
+    //Packinglists
+    @Override
+    public List<Packinglists> findOpenPackinglistsByDistrict(Districts district) {
+        Query query = em.createNamedQuery("Packinglists.findOpenByIdDistrict");
+        query.setParameter("idDistrict", district);
+        List pl = query.getResultList();
+        return pl;
+    }
+    
+    @Override
+    public Packinglists addPackinglist(Districts district) {
+        Packinglists pl = new Packinglists();
+        pl.setIdDistrict(district);
+        pl.setFirsdate(new Date());
+        pl.setPlSize(0.0);
+        pl.setState(0);
+        em.persist(pl);
+        return pl;
+    }
+    
     private Orders reCountOrder(Orders order){
         List lgp = order.getGoodspositions();
         double size = 0.0, amount = 0.0;
@@ -333,5 +388,16 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         order.setAmount(amount);
         order.setSize(size);
         return order;
+    }
+    
+    private Packinglists reCountPackinglist(Packinglists packinglist){
+        List lpl = packinglist.getOrders();
+        double size = 0.0;
+        for (int i = 0; i < lpl.size(); i++) {
+            Orders iterOrder = (Orders) lpl.get(i);
+            size += iterOrder.getSize();
+        }
+        packinglist.setPlSize(size);
+        return packinglist;
     }
 }

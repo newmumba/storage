@@ -1,6 +1,12 @@
 $(document).ready(function () {
     var pathOrders = "http://localhost:8080/storage-war/api/orders";
     
+    $(".button-accept-order-yes").click(function(){
+        var orderId = $(this).attr("button-order-id");
+        if (orderId !== "")
+            acceptOrder(orderId);
+    })
+    
     //orders
     function getOrdersAll() {
         $.ajax({
@@ -25,13 +31,39 @@ $(document).ready(function () {
         });
     }
     
+    function acceptOrder(orderId){
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'POST',
+            'url': pathOrders + '/accept',
+            'data': orderId,
+            'dataType': 'json',
+            'success': function(data) {
+                if (data) {
+                    data.orders = !(data.orders instanceof Array) ? [data.orders] : data.orders;
+                    var arr = data.orders.map(function(order) {
+                        return order;
+                    });
+                    renderOrders(arr);
+                } else {
+                    $('.orders-all').html("<p>Нет заявок</p>");
+                }
+                //закрываем модальное окно
+                $('.button-default-accept').click();
+            }
+        });
+    }
+    
     //ptint orders for customers
     function renderOrders(arr) {
         var html = '';
         arr.forEach(function(en) {
             var orderString = getHtmlOrderString(en);
             var htmlOrderButton = '<tr class="order-string" order-id="' + en.id + '">' + orderString +
-                    '<td><span class="glyphicon glyphicon-ok order-ok" data-toggle="modal" data-target="#modal-order-ok"></span></td</tr>';
+                    '<td><span class="glyphicon glyphicon-ok button-accept-order" data-toggle="modal" data-target="#modal-accept-order"></span></td</tr>';
             //(en.goodspositions ? '<tr><td colspan="2"></td><td colspan="2">' + en.goodspositions.id + '</td><td colspan="2">' + en.goodspositions.count + '</td><td colspan="2">' + en.goodspositions.idGoods.name + '</td><td colspan="1">' + en.goodspositions.idGoods.goodSize + '</td></tr>':'');
 
             if (en.goodspositions) {
@@ -52,6 +84,7 @@ $(document).ready(function () {
                     '</div></div></div></div>' + html;
         });
         $('.orders-all').html(html);
+        addClick();
     }
     
     function getHtmlOrderString(en) {
@@ -85,6 +118,13 @@ $(document).ready(function () {
         html = '<table class="table table-condensed"><thead><tr><th>Товар</th><th>Кол-во</th><th>Размер</th><th>Цена</th><th>Сумма</th></tr></thead><tbody>' + goodString +
                 '</tbody></table>';
         return html;
+    }
+    
+    function addClick(){
+        $('.button-accept-order').click(function() {
+            orderId = $(this).parents("tr").attr('order-id');
+            $(".button-accept-order-yes").attr("button-order-id", orderId);
+        });
     }
     
     getOrdersAll();

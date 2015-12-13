@@ -41,7 +41,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Orders.findSent", query = "SELECT o FROM Orders o WHERE o.state != 0"),
     @NamedQuery(name = "Orders.findByDate", query = "SELECT o FROM Orders o WHERE o.date = :date"),
     @NamedQuery(name = "Orders.findByAddress", query = "SELECT o FROM Orders o WHERE o.address = :address"),
-    @NamedQuery(name = "Orders.findByIdPackinglist", query = "SELECT o FROM Orders o WHERE o.idPackinglist = :idPackinglist"),
     @NamedQuery(name = "Orders.findByIdCustomers", query = "SELECT o FROM Orders o WHERE o.customer.id = :customerId")})
 public class Orders implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -72,8 +71,6 @@ public class Orders implements Serializable {
     @Size(max = 150)
     @Column(name = "ADDRESS")
     private String address;
-    @Column(name = "ID_PACKINGLIST")
-    private Integer idPackinglist;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true) 
     private List<Goodspositions> goodspositions;
 
@@ -152,14 +149,6 @@ public class Orders implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Integer getIdPackinglist() {
-        return idPackinglist;
-    }
-
-    public void setIdPackinglist(Integer idPackinglist) {
-        this.idPackinglist = idPackinglist;
     }
 
     public List<Goodspositions> getGoodspositions() {
