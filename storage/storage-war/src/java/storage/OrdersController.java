@@ -22,6 +22,12 @@ public class OrdersController {
     }
     
     @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Orders> getOrdersAll() throws NamingException {
+        return ordersBean.findOrders();
+    }
+
+    @GET
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Orders> getOrders(@PathParam("id") String id) throws NamingException{
