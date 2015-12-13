@@ -9,7 +9,7 @@ $(document).ready(function () {
                 'Content-Type': 'application/json'
             },
             'type': 'GET',
-            'url': pathOrders,
+            'url': pathOrders + '/sent',
             'dataType': 'json',
             'success': function(data) {
                 if (data) {
@@ -62,7 +62,7 @@ $(document).ready(function () {
             htmlDistrict = '</td><td class = "order-district-id" district-id = "' + en.idDistrict.id + '">' + en.idDistrict.district;
         }
         var html = '<td>' + ((en.id) ? en.id : '') +
-                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state === 1 ? 'На рассмотрении' : (en.state === 2 ? 'Принята' : (en.state === 3 ? 'Доставка' : 'Открыта'))) +
+                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ? 'На рассмотрении' : (en.state == 2 ? 'Принята' : (en.state == 3 ? 'Доставка' : 'Открыта'))) +
                 '</td><td>' + ((new Date(en.date)).toLocaleString()) +
                 '</td>' + htmlDistrict +
                 '<td class = "order-address">' + ((en.address) ? en.address : '') +

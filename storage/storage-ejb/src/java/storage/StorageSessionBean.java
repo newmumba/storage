@@ -184,11 +184,27 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     
     @Override
     public List<Orders> findOrdersByCustomerId(int id) {
-        
         Query query = em.createNamedQuery("Orders.findByIdCustomers");
         query.setParameter("customerId", id);
         List orders = query.getResultList();
         return orders;
+    }
+    
+    @Override
+    public List<Orders> findOrdersSent() {
+        Query query = em.createNamedQuery("Orders.findSent");
+        List orders = (List) query.getResultList();
+        return orders;
+    }
+    
+    @Override
+    public List<Orders> sendOrder(int id, int customerId) {
+        Orders order = getOrderById(id);
+        if(order.getState() == 0) {
+            order.setState(1);
+        }
+        em.persist(order);
+        return findOrdersByCustomerId(customerId);
     }
     
     @Override

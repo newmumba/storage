@@ -89,7 +89,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Удаление заявки</h4>
+                <h4 class="modal-title" id="deleteOrderModalLabel">Удаление заявки</h4>
             </div>
             <div class="modal-body">
                 Точно удалить заявку?
@@ -107,12 +107,29 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="mySmallModalLabel">Удаление товара</h4>
+                <h4 class="modal-title" id="deleteGoodModalLabel">Удаление товара</h4>
             </div>
             <div class="modal-body">
                 Точно удалить товар в заявке?
                 <button type="button" class="btn btn-default button-default-delete" data-dismiss="modal">Нет</button>
                 <button button-goodsposition-id="" button-gp-order-id="" type="button" class="btn btn-primary button-delete-good-yes">Да</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal-Send-Order -->
+<div id="modal-send-order" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="sendOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="sendModalLabel">Отправка заявки</h4>
+            </div>
+            <div class="modal-body">
+                Отправить заявку?
+                <button type="button" class="btn btn-default button-default-send" data-dismiss="modal">Нет</button>
+                <button button-order-id="" type="button" class="btn btn-primary button-send-order">Да</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -28,6 +28,13 @@ public class OrdersController {
     }
 
     @GET
+    @Path("/sent")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Orders> getOrdersSent() throws NamingException {
+        return ordersBean.findOrdersSent();
+    }
+    
+    @GET
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Orders> getOrders(@PathParam("id") String id) throws NamingException{
@@ -35,10 +42,17 @@ public class OrdersController {
     }
     
     @POST
-    @Path("add/{id}")
+    @Path("/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void createForCustomer(InputOrder inputOrder) throws NamingException {
         ordersBean.addOrder(inputOrder);
+    }
+    
+    @POST
+    @Path("/send/{customerId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Orders> sendOrder(String orderId, @PathParam("customerId") String customerId) throws NamingException {
+        return ordersBean.sendOrder(Integer.valueOf(orderId), Integer.valueOf(customerId));
     }
     
     @POST

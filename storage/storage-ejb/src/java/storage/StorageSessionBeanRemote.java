@@ -46,6 +46,9 @@ public interface StorageSessionBeanRemote {
     //Orders
     List<Orders> findOrders();
     List<Orders> findOrdersByCustomerId(int id);
+    List<Orders> findOrdersSent();
+    List<Orders> sendOrder(int id, int customerId);
+    
     void addOrder(InputOrder inputOrder);
     Orders getOrderById(int id);
     void addOrder(Orders order);
@@ -57,5 +60,5 @@ public interface StorageSessionBeanRemote {
     Goodspositions getGoodspositionsById(int id);
     Orders deleteGoodspositionsInOrder(Integer goodspositionsId, Integer orderId);
     Orders incGoodspositionInOrder(Integer goodspositionsId, Integer orderId);
-    Orders decGoodspositionInOrder(Integer goodspositionsId, Integer orderId);        
+    Orders decGoodspositionInOrder(Integer goodspositionsId, Integer orderId);
 }
