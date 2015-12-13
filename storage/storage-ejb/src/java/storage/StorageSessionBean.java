@@ -250,13 +250,41 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
                     size += iterGP.getIdGoods().getGoodSize() *  iterGP.getCount();
                     amount += iterGP.getIdGoods().getPrice() *  iterGP.getCount();
                 }
-                
             }
             order.setAmount(amount);
             order.setSize(size);
             order.setGoodspositions(lgp);
             em.persist(order);
         }
+        return order;
+    }
+
+    @Override
+    public Goodspositions getGoodspositionsById(int id) {
+        Query query = em.createNamedQuery("Goodspositions.findById");
+        query.setParameter("id", id);
+        Goodspositions gp = (Goodspositions) query.getResultList().get(0);
+        return gp;
+    }
+    
+    @Override
+    public Orders deleteGoodspositionsInOrder(Integer goodspositionsId, Integer orderId) {
+        Goodspositions gp = (Goodspositions) getGoodspositionsById(goodspositionsId);
+        Orders order = (Orders) getOrderById(orderId);
+        List lgp = order.getGoodspositions();
+        lgp.remove(gp);
+        double size = 0.0, amount = 0.0;
+        for (int i = 0; i < lgp.size(); i++) {
+            Goodspositions iterGP = (Goodspositions) lgp.get(i);
+            if (iterGP.getIdGoods() != null) {
+                size += iterGP.getIdGoods().getGoodSize() * iterGP.getCount();
+                amount += iterGP.getIdGoods().getPrice() * iterGP.getCount();
+            }
+        }
+        order.setAmount(amount);
+        order.setSize(size);
+        order.setGoodspositions(lgp);
+        em.persist(order);
         return order;
     }
 }

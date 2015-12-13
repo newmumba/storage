@@ -25,9 +25,10 @@ public class GoodspositionsController {
     }
 
     @DELETE
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void delGood(String id) throws NamingException {
-        GPBean.deleteGoodById(Integer.valueOf(id));
+    public Orders delGPInOrder(String id , @PathParam("id") String orderId) throws NamingException {
+        return GPBean.deleteGoodspositionsInOrder(Integer.valueOf(id), Integer.valueOf(orderId));
     }
 
     @POST

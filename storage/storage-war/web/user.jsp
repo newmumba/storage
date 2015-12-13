@@ -100,6 +100,24 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- Modal-Delete-Good-In-Order -->
+<div id="modal-delete-good-in-order" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="deleteGoodInOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="mySmallModalLabel">Удаление товара</h4>
+            </div>
+            <div class="modal-body">
+                Точно удалить товар в заявке?
+                <button type="button" class="btn btn-default button-default-delete" data-dismiss="modal">Нет</button>
+                <button button-goodsposition-id="" button-gp-order-id="" type="button" class="btn btn-primary button-delete-good-yes">Да</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <jsp:include page="/WEB-INF/footer.jsp" />
 <script src="js/user.js"></script>
 </body>

@@ -60,6 +60,14 @@ $(document).ready(function () {
             delOrder(orderId);
     });
     
+    
+    $('.button-delete-good-yes').click(function(){
+        var goodspositionId = $(this).attr("button-goodsposition-id");
+        var orderId = $(this).attr('button-gp-order-id')
+        if (goodspositionId !== "")
+            delGoodsInOrder(goodspositionId, orderId);
+    });
+    
     function getCustomerById(customerId) {
         $.ajax({
             headers: {
@@ -203,7 +211,32 @@ $(document).ready(function () {
                 //удаляем инфу о заявке
                 var divOrder = '.panel-order-' + orderId;
                 $(divOrder).remove();
+                //обновляем вычисляемые величины
+                (data.size) ? $('tr[order-id=' + data.id + ']').find('.order-size').html(data.size) : '';
+                (data.amount) ? $('tr[order-id=' + data.id + ']').find('.order-amount').html(data.amount) : '';
                 //закрываем модальное окно
+                $('.button-default-delete').click();
+            }
+        });
+    }
+    
+    //delete Goods In Order
+    function delGoodsInOrder(goodspositionId, orderId){
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'DELETE',
+            'url': pathGP + '/' + orderId,
+            'data': goodspositionId,
+            'dataType': 'json',
+            'success': function(data) {
+                //удаляем инфу о товаре
+                $('tr[goodsposition-id=' + goodspositionId + ']').remove();
+                //закрываем модальное окно
+                (data.size) ? $('tr[order-id=' + data.id + ']').find('.order-size').html(data.size) : '';
+                (data.amount) ? $('tr[order-id=' + data.id + ']').find('.order-amount').html(data.amount) : '';
                 $('.button-default-delete').click();
             }
         });
@@ -244,7 +277,7 @@ $(document).ready(function () {
                     '<div><table class="table table-condensed">' + htmlOrderButton + '</table></div>' +
                     '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + en.id + '">' +
                     '<div class ="row button-open-order"><div class="col-xs-12"></div></div></a></div></div>' +
-                    '<div id="collapse' + en.id + '" class="panel-collapse collapse"><div class="panel-body"><div class="table-goods-in-order">' +
+                    '<div id="collapse' + en.id + '" order-id = "' + en.id + '" class="panel-collapse collapse"><div class="panel-body"><div class="table-goods-in-order">' +
                     htmlGoodsInOrder + 
                     '</div><button order-id="' + en.id + '" class="btn btn-primary button-good" data-toggle="modal" data-target="#modal-good">Добавить</button></div></div></div>' + html; 
         });
@@ -256,13 +289,13 @@ $(document).ready(function () {
         var html = '';
         var goodString = '';
         arr.forEach(function(en) {
-            goodString = '<tr><td>' + ((en.idGoods) ? ((en.idGoods.name) ? en.idGoods.name : '') : '') + 
+            goodString = '<tr goodsposition-id="' + en.id + '"><td>' + ((en.idGoods) ? ((en.idGoods.name) ? en.idGoods.name : '') : '') + 
                     '</td><td>' + ((en.count) ? en.count : '') + 
                     '</td><td>' + ((en.idGoods) ? ((en.idGoods.goodSize) ? en.idGoods.goodSize :'') : '') + 
                     '</td><td>' + ((en.idGoods) ? ((en.idGoods.price) ? en.idGoods.price :'') : '') + 
                     '</td><td>' + ((en.idGoods && en.count) ? ((en.idGoods.price && en.count) ? (en.idGoods.price * en.count) : '') : '')  + '</td>'+
                     '<td><span class="glyphicon glyphicon-pencil button-change-good-in-order" data-toggle="modal" data-target="#modal-order"></span></td>' + 
-                    '<td><span class="glyphicon glyphicon-trash button-delete-good-in-order" data-toggle="modal" data-target=".bs-example-modal-sm"></span></td</tr>'+
+                    '<td><span class="glyphicon glyphicon-trash button-delete-good-in-order" data-toggle="modal" data-target="#modal-delete-good-in-order"></span></td</tr>'+
                     '</tr>' + goodString;
         });
         html = '<table class="table table-condensed"><thead><tr><th>Товар</th><th>Кол-во</th><th>Размер</th><th>Цена</th><th>Сумма</th><th></th><th></th></tr></thead><tbody>' + goodString + 
@@ -364,11 +397,20 @@ $(document).ready(function () {
             $('.button-add-good').html("Добавить");
             $('.button-add-good').attr("button-context", "add");
             $('.button-add-good').attr("order-id", $(this).attr("order-id"));
+            $('#good-count').val("1");
         });
         
         $('.button-delete-order').click(function() {
             orderId = $(this).parents("tr").attr('order-id');
             $(".button-delete-order-yes").attr("button-order-id", orderId);
+        });
+        
+        $('.button-delete-good-in-order').click(function(){
+            goodspositionId = $(this).parents('tr').attr('goodsposition-id');
+            orderId = $(this).closest('.panel-collapse').attr('order-id');
+            $('.button-delete-good-yes').attr('button-goodsposition-id', goodspositionId);
+            $('.button-delete-good-yes').attr('button-gp-order-id', orderId);
+            
         });
     }
     
