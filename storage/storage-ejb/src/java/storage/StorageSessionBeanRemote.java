@@ -56,4 +56,6 @@ public interface StorageSessionBeanRemote {
     Orders addGoodspositionsInOrder(InputGoodspositions inputGP);
     Goodspositions getGoodspositionsById(int id);
     Orders deleteGoodspositionsInOrder(Integer goodspositionsId, Integer orderId);
+    Orders incGoodspositionInOrder(Integer goodspositionsId, Integer orderId);
+    Orders decGoodspositionInOrder(Integer goodspositionsId, Integer orderId);        
 }

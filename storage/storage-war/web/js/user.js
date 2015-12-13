@@ -126,21 +126,44 @@ $(document).ready(function () {
             'data': JSON.stringify(newGoodInOrder),
             'dataType': 'json',
             'success': function(data) {
-                if(data){
-                    console.log(data);
-                    if(data.goodspositions && data.id){
-                        var divId = '#collapse' + data.id;
-                        data.goodspositions = !(data.goodspositions instanceof Array) ? [data.goodspositions] : data.goodspositions;
-                        var arr = data.goodspositions.map(function(goodsposition) {
-                            return goodsposition;
-                        });
-                        $(divId).find('.table-goods-in-order').html(renderGoodsInOrder(arr));
-                    }
-                    (data.size) ? $('tr[order-id=' + data.id + ']').find('.order-size').html(data.size) : '';
-                    (data.amount) ? $('tr[order-id=' + data.id + ']').find('.order-amount').html(data.amount) : '';
-                }
+                goodspositionUpdate(data);
             }
         });
+    }
+    
+    function goodspositionUpdate(data){
+        if (data) {
+            if (data.goodspositions && data.id) {
+                var divId = '#collapse' + data.id;
+                data.goodspositions = !(data.goodspositions instanceof Array) ? [data.goodspositions] : data.goodspositions;
+                var arr = data.goodspositions.map(function(goodsposition) {
+                    return goodsposition;
+                });
+                $(divId).find('.table-goods-in-order').html(renderGoodsInOrder(arr));
+                
+                $(divId).find('.table-goods-in-order').find('.button-delete-good-in-order').click(function() {
+                    goodspositionId = $(this).parents('tr').attr('goodsposition-id');
+                    orderId = $(this).closest('.panel-collapse').attr('order-id');
+                    $('.button-delete-good-yes').attr('button-goodsposition-id', goodspositionId);
+                    $('.button-delete-good-yes').attr('button-gp-order-id', orderId);
+
+                });
+                
+                $(divId).find('.table-goods-in-order').find('.button-plus').click(function() {
+                    var goodspositionId = $(this).parents("tr").attr('goodsposition-id');
+                    orderId = $(this).closest('.panel-collapse').attr('order-id');
+                    incGoodsposition(goodspositionId, orderId, this);
+                });
+
+                $(divId).find('.table-goods-in-order').find('.button-minus').click(function() {
+                    var goodspositionId = $(this).parents("tr").attr('goodsposition-id');
+                    orderId = $(this).closest('.panel-collapse').attr('order-id');
+                    decGoodsposition(goodspositionId, orderId, this);
+                });
+            }
+            (data.size) ? $('tr[order-id=' + data.id + ']').find('.order-size').html(data.size) : '';
+            (data.amount) ? $('tr[order-id=' + data.id + ']').find('.order-amount').html(data.amount) : '';
+        }
     }
     
     //orders
@@ -196,6 +219,40 @@ $(document).ready(function () {
         });
     }
     
+    //плюс
+    function incGoodsposition(goodspositionId, orderId, ctx) {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'POST',
+            'url': pathGP + "/inc/" + orderId,
+            'data': goodspositionId,
+            'dataType': 'json',
+            'success': function(data) {
+                goodspositionUpdate(data);
+            }
+        });
+    }
+
+    //минус
+    function decGoodsposition(goodspositionId, orderId, ctx) {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'POST',
+            'url': pathGP + "/dec/" + orderId,
+            'data': goodspositionId,
+            'dataType': 'json',
+            'success': function(data) {
+                goodspositionUpdate(data);
+            }
+        });
+    }
+    
     //delete order
     function delOrder(orderId) {
         $.ajax({
@@ -211,9 +268,6 @@ $(document).ready(function () {
                 //удаляем инфу о заявке
                 var divOrder = '.panel-order-' + orderId;
                 $(divOrder).remove();
-                //обновляем вычисляемые величины
-                (data.size) ? $('tr[order-id=' + data.id + ']').find('.order-size').html(data.size) : '';
-                (data.amount) ? $('tr[order-id=' + data.id + ']').find('.order-amount').html(data.amount) : '';
                 //закрываем модальное окно
                 $('.button-default-delete').click();
             }
@@ -294,11 +348,12 @@ $(document).ready(function () {
                     '</td><td>' + ((en.idGoods) ? ((en.idGoods.goodSize) ? en.idGoods.goodSize :'') : '') + 
                     '</td><td>' + ((en.idGoods) ? ((en.idGoods.price) ? en.idGoods.price :'') : '') + 
                     '</td><td>' + ((en.idGoods && en.count) ? ((en.idGoods.price && en.count) ? (en.idGoods.price * en.count) : '') : '')  + '</td>'+
-                    '<td><span class="glyphicon glyphicon-pencil button-change-good-in-order" data-toggle="modal" data-target="#modal-order"></span></td>' + 
+                    '<td><span class="glyphicon glyphicon-plus button-plus"></span></td>' +
+                    '<td><span class="glyphicon glyphicon-minus button-minus"></span></td>' +
                     '<td><span class="glyphicon glyphicon-trash button-delete-good-in-order" data-toggle="modal" data-target="#modal-delete-good-in-order"></span></td</tr>'+
                     '</tr>' + goodString;
         });
-        html = '<table class="table table-condensed"><thead><tr><th>Товар</th><th>Кол-во</th><th>Размер</th><th>Цена</th><th>Сумма</th><th></th><th></th></tr></thead><tbody>' + goodString + 
+        html = '<table class="table table-condensed"><thead><tr><th>Товар</th><th>Кол-во</th><th>Размер</th><th>Цена</th><th>Сумма</th><th></th><th></th><th></th></tr></thead><tbody>' + goodString + 
                 '</tbody></table>';
         return html;
     }
@@ -411,6 +466,18 @@ $(document).ready(function () {
             $('.button-delete-good-yes').attr('button-goodsposition-id', goodspositionId);
             $('.button-delete-good-yes').attr('button-gp-order-id', orderId);
             
+        });
+        
+        $('.button-plus').click(function() {
+            var goodspositionId = $(this).parents("tr").attr('goodsposition-id');
+            orderId = $(this).closest('.panel-collapse').attr('order-id');
+            incGoodsposition(goodspositionId, orderId, this);
+        });
+
+        $('.button-minus').click(function() {
+            var goodspositionId = $(this).parents("tr").attr('goodsposition-id');
+            orderId = $(this).closest('.panel-collapse').attr('order-id');
+            decGoodsposition(goodspositionId, orderId, this);
         });
     }
     

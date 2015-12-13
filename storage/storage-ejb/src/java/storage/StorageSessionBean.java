@@ -243,17 +243,8 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
             Goodspositions gp = new Goodspositions(good, inputGP.getCount());
             List<Goodspositions> lgp = order.getGoodspositions();
             lgp.add(gp);
-            double size = 0.0, amount = 0.0;
-            for (int i = 0; i < lgp.size(); i++) {
-                Goodspositions iterGP = lgp.get(i);
-                if(iterGP.getIdGoods() != null){
-                    size += iterGP.getIdGoods().getGoodSize() *  iterGP.getCount();
-                    amount += iterGP.getIdGoods().getPrice() *  iterGP.getCount();
-                }
-            }
-            order.setAmount(amount);
-            order.setSize(size);
             order.setGoodspositions(lgp);
+            reCountOrder(order);
             em.persist(order);
         }
         return order;
@@ -273,6 +264,48 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         Orders order = (Orders) getOrderById(orderId);
         List lgp = order.getGoodspositions();
         lgp.remove(gp);
+        order.setGoodspositions(lgp);
+        reCountOrder(order);
+        em.persist(order);
+        return order;
+    }
+
+    @Override
+    public Orders incGoodspositionInOrder(Integer goodspositionsId, Integer orderId) {
+        Goodspositions gp = (Goodspositions) getGoodspositionsById(goodspositionsId);
+        Orders order = (Orders) getOrderById(orderId);
+        List lgp = order.getGoodspositions();
+        int index = lgp.indexOf(gp);
+                
+        int count = gp.getCount();
+        gp.setCount(++count);
+        lgp.set(index, gp);
+        order.setGoodspositions(lgp);
+        reCountOrder(order);
+        em.persist(order);
+        return order;
+    }
+
+    @Override
+    public Orders decGoodspositionInOrder(Integer goodspositionsId, Integer orderId) {
+        Goodspositions gp = (Goodspositions) getGoodspositionsById(goodspositionsId);
+        Orders order = (Orders) getOrderById(orderId);
+        List lgp = order.getGoodspositions();
+        int index = lgp.indexOf(gp);
+
+        int count = gp.getCount();
+        if (count > 0 ){
+            gp.setCount(--count);
+        }
+        lgp.set(index, gp);
+        order.setGoodspositions(lgp);
+        reCountOrder(order);
+        em.persist(order);
+        return order;
+    }
+    
+    private Orders reCountOrder(Orders order){
+        List lgp = order.getGoodspositions();
         double size = 0.0, amount = 0.0;
         for (int i = 0; i < lgp.size(); i++) {
             Goodspositions iterGP = (Goodspositions) lgp.get(i);
@@ -283,8 +316,6 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         }
         order.setAmount(amount);
         order.setSize(size);
-        order.setGoodspositions(lgp);
-        em.persist(order);
         return order;
     }
 }

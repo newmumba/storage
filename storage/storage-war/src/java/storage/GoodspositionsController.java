@@ -32,10 +32,16 @@ public class GoodspositionsController {
     }
 
     @POST
-    @Path("/update/{id}")
+    @Path("/inc/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Goods updateGood(Goods good, @PathParam("id") String id) throws NamingException {
-        good.setId(Integer.valueOf(id));
-        return GPBean.updateGood(good);
+    public Orders incGoodsposition(String id, @PathParam("id") String orderId) throws NamingException {
+        return GPBean.incGoodspositionInOrder(Integer.valueOf(id), Integer.valueOf(orderId));
+    }
+
+    @POST
+    @Path("/dec/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Orders decGoodsposition(String id, @PathParam("id") String orderId) throws NamingException {
+        return GPBean.decGoodspositionInOrder(Integer.valueOf(id), Integer.valueOf(orderId));
     }
 }
