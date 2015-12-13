@@ -212,9 +212,9 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         Orders order = getOrderById(id);
         if (order.getState() == 1) {
             order.setState(2);
+            addOrderInPackinglist(order);
+            em.persist(order);
         }
-        addOrderInPackinglist(order);
-        em.persist(order);
         return findOrdersSent();
     }
     
@@ -357,11 +357,28 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     
     //Packinglists
     @Override
+    public List<Packinglists> findPackinglists() {
+        Query query = em.createNamedQuery("Packinglists.findAll");
+        List pl = query.getResultList();
+        return pl;
+    }
+    
+    @Override
     public List<Packinglists> findOpenPackinglistsByDistrict(Districts district) {
         Query query = em.createNamedQuery("Packinglists.findOpenByIdDistrict");
         query.setParameter("idDistrict", district);
         List pl = query.getResultList();
         return pl;
+    }
+    
+    @Override
+    public List<Packinglists> acceptPackinglist(int id) {
+        Packinglists pl = getPackinglistById(id);
+        if (pl.getState() == 0){
+            pl.setState(1);
+            em.persist(pl);
+        }
+        return findPackinglists();
     }
     
     @Override
@@ -375,6 +392,15 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         return pl;
     }
     
+    @Override
+    public Packinglists getPackinglistById(int id) {
+        Query query = em.createNamedQuery("Packinglists.findById");
+        query.setParameter("id", id);
+        Packinglists pl = (Packinglists) query.getResultList().get(0);
+        return pl;
+    }
+    
+    //other methods
     private Orders reCountOrder(Orders order){
         List lgp = order.getGoodspositions();
         double size = 0.0, amount = 0.0;

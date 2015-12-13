@@ -7,6 +7,7 @@
 .button-auth{margin-left: 27px;}
 .form-auth-hrading{margin: 10px 0 40px 0;}
 .button-open-order{background-color: #CB9B9B; height: 20px; border-radius: 2px; margin: -10px 0 -10px 0;}
+.button-open-packinglist{background-color: #CB9B9B; height: 20px; border-radius: 2px; margin: -10px 0 -10px 0;}
 .button-add-good-in-order{margin: 0 0 0 10px;}
 a[aria-expanded="true"] .button-open-order {background-color: #E3B574;}
 .panel-heading{border-radius:10px;}

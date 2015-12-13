@@ -65,6 +65,10 @@ public interface StorageSessionBeanRemote {
     Orders decGoodspositionInOrder(Integer goodspositionsId, Integer orderId);
     
     //Packinglists
+    List<Packinglists> findPackinglists();
     List<Packinglists> findOpenPackinglistsByDistrict(Districts district);
+    List<Packinglists> acceptPackinglist(int id);
+            
     Packinglists addPackinglist(Districts district);
+    Packinglists getPackinglistById(int id);
 }
