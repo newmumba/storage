@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/header.jsp" />
 
+<h3>Интерфейс начальника склада</h3>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs">
     <li class="active"><a href="#orders" data-toggle="tab">Заявки</a></li>

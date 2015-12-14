@@ -7,7 +7,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.Order;
 
 @Stateless
 public class StorageSessionBean implements StorageSessionBeanRemote, StorageSessionBeanLocal {
@@ -258,6 +257,7 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
 
     @Override
     public void deleteOrderById(int id) {
+        System.err.println("!");
         em.remove((Orders) getOrderById(id));
     }
     
@@ -359,6 +359,13 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     @Override
     public List<Packinglists> findPackinglists() {
         Query query = em.createNamedQuery("Packinglists.findAll");
+        List pl = query.getResultList();
+        return pl;
+    }
+    
+    @Override
+    public List<Packinglists> findPackinglistsAccepted() {
+        Query query = em.createNamedQuery("Packinglists.findAccepted");
         List pl = query.getResultList();
         return pl;
     }

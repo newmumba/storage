@@ -45,6 +45,7 @@ public class OrdersController {
     @Path("/add/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void createForCustomer(InputOrder inputOrder) throws NamingException {
+        System.err.println("!");
         ordersBean.addOrder(inputOrder);
     }
     

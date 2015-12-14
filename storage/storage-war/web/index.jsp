@@ -6,6 +6,7 @@
     <li><a href="cars.jsp">Машины</a></li>
     <li><a href="user.jsp">Пользователь</a></li>
     <li><a href="orders.jsp">Заявки (Начальник склада)</a></li>
+    <li><a href="pl.jsp">Накладные (Начальник транспортного отдела)</a></li>
 </ul> 
 <jsp:include page="/WEB-INF/footer.jsp" />
 </body>

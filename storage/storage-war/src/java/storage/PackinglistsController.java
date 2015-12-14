@@ -24,8 +24,15 @@ public class PackinglistsController {
         return packinglistsBean.findPackinglists();
     }
     
+    @GET
+    @Path("/accepted")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Packinglists> getPackinglistsAccepted() throws NamingException {
+        return packinglistsBean.findPackinglistsAccepted();
+    }
+    
     @POST
-    @Path("/accept/")
+    @Path("/accept")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Packinglists> acceptPackinglist(String packinglistId) throws NamingException {
         return packinglistsBean.acceptPackinglist(Integer.valueOf(packinglistId));

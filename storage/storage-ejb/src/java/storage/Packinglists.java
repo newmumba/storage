@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Packinglists.findAll", query = "SELECT p FROM Packinglists p"),
+    @NamedQuery(name = "Packinglists.findAccepted", query = "SELECT p FROM Packinglists p WHERE p.state !=0"),
     @NamedQuery(name = "Packinglists.findById", query = "SELECT p FROM Packinglists p WHERE p.id = :id"),
     @NamedQuery(name = "Packinglists.findOpenByIdDistrict", query = "SELECT p FROM Packinglists p WHERE p.idDistrict = :idDistrict AND p.state = 0"),
     @NamedQuery(name = "Packinglists.findByPlSize", query = "SELECT p FROM Packinglists p WHERE p.plSize = :plSize"),

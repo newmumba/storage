@@ -1,16 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package storage;
 
 import java.util.List;
 import javax.ejb.Remote;
 
-/**
- *
- * @author Антон
- */
 @Remote
 public interface StorageSessionBeanRemote {
     //Goods
@@ -66,6 +58,7 @@ public interface StorageSessionBeanRemote {
     
     //Packinglists
     List<Packinglists> findPackinglists();
+    List<Packinglists> findPackinglistsAccepted();
     List<Packinglists> findOpenPackinglistsByDistrict(Districts district);
     List<Packinglists> acceptPackinglist(int id);
             
