@@ -76,6 +76,13 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     }
     
     @Override
+    public List<Cars> findCarsFree() {
+        Query query = em.createNamedQuery("Cars.findFree");
+        List cars = query.getResultList();
+        return cars;
+    }
+    
+    @Override
     public Cars getCarById(int id) {
         Query query = em.createNamedQuery("Cars.findById");
         query.setParameter("id", id);
@@ -86,6 +93,27 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
     @Override
     public void addCar(Cars car) {
         em.persist(car);
+    }
+    
+    @Override
+    public void returnCar(int id){
+        Cars car = getCarById(id);
+        if(!car.getState()){//занята
+            car.setState(true);
+            Packinglists pl = findPackinglistForReturn(id);
+            if(pl != null) {
+                List<Orders> orders = pl.getOrders();
+                if (orders != null) {
+                    for (int i = 0; i < orders.size(); i++) {
+                        orders.get(i).setState(4);
+                    }
+                    pl.setOrders(orders);
+                }
+                pl.setState(3);
+                em.persist(car);
+                em.persist(pl);
+            }
+        }
     }
     
     @Override
@@ -257,7 +285,6 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
 
     @Override
     public void deleteOrderById(int id) {
-        System.err.println("!");
         em.remove((Orders) getOrderById(id));
     }
     
@@ -386,6 +413,38 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
             em.persist(pl);
         }
         return findPackinglists();
+    }
+    
+    @Override
+    public List<Packinglists> appointCarInPackinglist(int id, int carId) {
+        Packinglists pl = getPackinglistById(id);
+        Cars car = getCarById(carId);
+        if (pl.getState() == 1) {
+            pl.setState(2);
+            pl.setIdCar(car);
+            
+            List<Orders> orders = pl.getOrders();
+            if(orders!= null){
+                for(int i=0; i<orders.size() ;i++){
+                    orders.get(i).setState(3);
+                }
+                pl.setOrders(orders);
+            }
+            em.persist(pl);
+        }
+        return findPackinglists();
+    }
+
+    @Override
+    public Packinglists findPackinglistForReturn(int carId){
+        Query query = em.createNamedQuery("Packinglists.findForReturn");
+        query.setParameter("idCar", carId);
+        List lpl = query.getResultList();
+        if(!lpl.isEmpty()){
+             return (Packinglists) query.getResultList().get(0);
+        }
+        return null;
+        
     }
     
     @Override

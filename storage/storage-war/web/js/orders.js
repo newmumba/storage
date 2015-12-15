@@ -164,9 +164,9 @@ $(document).ready(function () {
             }
             html = '<div class="panel panel-default panel-packinglist-' + en.id + '"><div class="panel-heading"><div class ="row">' +
                     '<div><table class="table table-condensed">' + htmlOrderButton + '</table></div>' +
-                    '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + en.id + '">' +
+                    '<a data-toggle="collapse" data-parent="#accordion" href="#collapsepl' + en.id + '">' +
                     '<div class ="row button-open-packinglist"><div class="col-xs-12"></div></div></a></div></div>' +
-                    '<div id="collapse' + en.id + '" packinglist-id = "' + en.id + '" class="panel-collapse collapse"><div class="panel-body"><div class="table-goods-in-order">' +
+                    '<div id="collapsepl' + en.id + '" packinglist-id = "' + en.id + '" class="panel-collapse collapse"><div class="panel-body"><div class="table-goods-in-order">' +
                     htmlOrderInPL +
                     '</div></div></div></div>' + html;
         });
@@ -182,7 +182,7 @@ $(document).ready(function () {
             htmlDistrict = '</td><td class = "order-district-id" district-id = "' + en.idDistrict.id + '">' + en.idDistrict.district;
         }
         var html = '<td>' + ((en.id) ? en.id : '') +
-                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ? 'На рассмотрении' : (en.state == 2 ? 'Принята' : (en.state == 3 ? 'Доставка' : 'Открыта'))) +
+                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ? 'На рассмотрении' : (en.state == 2 ? 'Принята' : (en.state == 3 ? 'Доставка' : (en.state == 4 ? 'Закрыта': 'Открыта')))) +
                 '</td><td>' + ((new Date(en.date)).toLocaleString()) +
                 '</td>' + htmlDistrict +
                 '<td class = "order-address">' + ((en.address) ? en.address : '') +
@@ -192,6 +192,7 @@ $(document).ready(function () {
     }
     
     function getHtmlPackinglistString(en) {
+        console.log(en);
         var htmlDistrict = '';
         if (en.idDistrict === undefined) {
             htmlDistrict = '</td><td class = "packinglist-district-id" district-id = "">';
@@ -200,7 +201,8 @@ $(document).ready(function () {
         }
         var html = '<td>' + ((en.id) ? en.id : '') +
                 '</td><td class = "packinglist-state" packinglist-state="' + en.state + '">' + (en.state == 1 ? 'Сформирована' : (en.state == 2 ? 'Доставка' : (en.state == 3 ? 'Закрыта' : 'Открыта'))) +
-                '</td><td>' + ((new Date(en.firsdate)).toLocaleDateString()) +
+                '</td><td>' + ((new Date(en.firsdate)).toLocaleDateString()) + 
+                '<td>' + ((en.idCar) ? ((en.idCar)? en.idCar.name: '') : '') + '</td>' +
                 '</td>' + htmlDistrict +
                 '</td><td  class="packinglist-size">' + ((en.plSize) ? en.plSize : '') + '</td>';
         return html;
@@ -227,7 +229,7 @@ $(document).ready(function () {
         var orderString = '';
         arr.forEach(function(en) {
             orderString = '<tr><td>' + ((en.id) ? en.id : '') +
-                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ? 'На рассмотрении' : (en.state == 2 ? 'Принята' : (en.state == 3 ? 'Доставка' : 'Открыта'))) +
+                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ? 'На рассмотрении' : (en.state == 2 ? 'Принята' : (en.state == 3 ? 'Доставка' :(en.state == 4 ? 'Закрыта': 'Открыта')))) +
                 '</td><td>' + ((new Date(en.date)).toLocaleDateString()) +
                 '</td><td class = "order-address">' + ((en.address) ? en.address : '') +
                 '</td><td class="order-amount">' + ((en.amount) ? en.amount : '') +

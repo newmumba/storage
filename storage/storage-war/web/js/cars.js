@@ -29,7 +29,7 @@ $(document).ready(function () {
         $('.button-add-car').attr("car-id", "");
     });
     
-    //получение всех товаров
+    //получение всех машин
     function getCarsAll(){
         $.ajax({
             headers:{
@@ -48,14 +48,14 @@ $(document).ready(function () {
                     });
                     renderCarsAll(arr);
                 }else{
-                    var html = '<p>Ни одного товара не добавлено!<p>';
+                    var html = '<p>Ни одной машины не добавлено!<p>';
                     $('.cars-all').html(html);
                 }
             }
         });
     }
     
-    //добавление товара 
+    //добавление машины 
     function createCar() {
         var newCar = {
             'name': $('#name').val(),
@@ -100,11 +100,11 @@ $(document).ready(function () {
                 $('#name').val("");
                 $('#carSize').val("");
 
-                //получаем новую строку товара
+                //получаем новую строку машины
                 var html = getHtmlCarString(data);
-                //удаляем инфу о товаре
+                //удаляем инфу о машине
                 $('tr[car-id=' + id + ']').children("td:lt(4)").remove();
-                //заменяем строку товара на новую
+                //заменяем строку машины на новую
                 $('tr[car-id=' + id + ']').prepend(html);
             }
         });
@@ -122,7 +122,7 @@ $(document).ready(function () {
             'data': carId,
             'dataType': 'json',
             'success': function(data) {
-                //удаляем инфу о товаре
+                //удаляем инфу о машине
                 $('tr[car-id=' + carId + ']').remove();
                 //закрываем модальное окно
                 $('.button-default-delete').click();
@@ -130,13 +130,13 @@ $(document).ready(function () {
         });
     }
     
-    //делаем строку товара в таблице.
+    //делаем строку машины в таблице.
     function getHtmlCarString(en){
         var html = '<td class = "car-name">' + en.name + '</td><td class = "car-size">' + en.carSize + '</td><td class = "car-state">' + (en.state == 'true' ?'Свободна': 'Занята') + '</td><td class = "car-date">' + ((new Date(en.date)).toLocaleString()) + '</td>';
         return html;
     }
     
-    //вывод всех товаров.
+    //вывод всех машин.
     function renderCarsAll(arr) {
         var html = '';
         arr.forEach(function(en) {

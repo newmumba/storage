@@ -29,12 +29,26 @@ public class CarsController {
          return carsBean.findCars();
     }
     
+    @GET
+    @Path("/free")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Cars> getCarsFree() throws NamingException {
+        return carsBean.findCarsFree();
+    }
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createCar(Cars car) throws NamingException{
         car.setDate(new Date());
         car.setState(true);
         carsBean.addCar(car);
+    }
+    
+    @POST
+    @Path("/return")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void returnCar(String carId) throws NamingException {
+        carsBean.returnCar(Integer.valueOf(carId));
     }
     
     @DELETE

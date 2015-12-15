@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 @Path("/pl")
@@ -36,5 +37,12 @@ public class PackinglistsController {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Packinglists> acceptPackinglist(String packinglistId) throws NamingException {
         return packinglistsBean.acceptPackinglist(Integer.valueOf(packinglistId));
+    }
+    
+    @POST
+    @Path("/appoint/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Packinglists> appointCarInPackinglist(String carId, @PathParam("id") String id) throws NamingException {
+        return packinglistsBean.appointCarInPackinglist(Integer.valueOf(id), Integer.valueOf(carId));
     }
 }

@@ -398,7 +398,7 @@ $(document).ready(function () {
         }
         var html ='<td>' + ((en.id) ? en.id : '') + 
                 '</td><td>' + ((new Date(en.date)).toLocaleString()) + 
-                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ?'На рассмотрении': (en.state == 2 ?'Принята': (en.state == 3 ?'Доставка': 'Открыта'))) + 
+                '</td><td class = "order-state" order-state="' + en.state + '">' + (en.state == 1 ?'На рассмотрении': (en.state == 2 ?'Принята': (en.state == 3 ?'Доставка': (en.state == 4 ? 'Закрыта': 'Открыта')))) + 
                 htmlDistrict + 
                 '</td><td class = "order-address">' + ((en.address) ? en.address : '') + 
                 '</td><td class="order-amount">' + ((en.amount) ? en.amount : '') + 

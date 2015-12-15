@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Packinglists.findAll", query = "SELECT p FROM Packinglists p"),
     @NamedQuery(name = "Packinglists.findAccepted", query = "SELECT p FROM Packinglists p WHERE p.state !=0"),
+    @NamedQuery(name = "Packinglists.findForReturn", query = "SELECT p FROM Packinglists p WHERE p.state = 2  AND p.idCar.id = :idCar"),
     @NamedQuery(name = "Packinglists.findById", query = "SELECT p FROM Packinglists p WHERE p.id = :id"),
     @NamedQuery(name = "Packinglists.findOpenByIdDistrict", query = "SELECT p FROM Packinglists p WHERE p.idDistrict = :idDistrict AND p.state = 0"),
     @NamedQuery(name = "Packinglists.findByPlSize", query = "SELECT p FROM Packinglists p WHERE p.plSize = :plSize"),
@@ -63,8 +64,9 @@ public class Packinglists implements Serializable {
     @Column(name = "FIRSDATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date firsdate;
-    @Column(name = "ID_CAR")
-    private Integer idCar;
+    @ManyToOne
+    @JoinColumn(name = "PACKINGLISTS_CAR_ID", referencedColumnName = "ID")
+    private Cars idCar;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Orders> orders;
     
@@ -120,11 +122,11 @@ public class Packinglists implements Serializable {
         this.firsdate = firsdate;
     }
 
-    public Integer getIdCar() {
+    public Cars getIdCar() {
         return idCar;
     }
 
-    public void setIdCar(Integer idCar) {
+    public void setIdCar(Cars idCar) {
         this.idCar = idCar;
     }
 

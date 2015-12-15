@@ -16,8 +16,10 @@ public interface StorageSessionBeanRemote {
     
     //Cars
     List<Cars> findCars();
+    List<Cars> findCarsFree();
     Cars getCarById(int id);
     void addCar(Cars car);
+    void returnCar(int id);
     Cars updateCar(Cars car);
     void deleteCarById(int id);
     
@@ -61,7 +63,9 @@ public interface StorageSessionBeanRemote {
     List<Packinglists> findPackinglistsAccepted();
     List<Packinglists> findOpenPackinglistsByDistrict(Districts district);
     List<Packinglists> acceptPackinglist(int id);
-            
+    List<Packinglists> appointCarInPackinglist(int id, int carId);
+    
+    Packinglists findPackinglistForReturn(int carId);
     Packinglists addPackinglist(Districts district);
     Packinglists getPackinglistById(int id);
 }
