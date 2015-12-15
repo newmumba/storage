@@ -182,7 +182,7 @@ $(document).ready(function () {
         var html = '<td>' + ((en.id) ? en.id : '') +
                 '</td><td class = "packinglist-state" packinglist-state="' + en.state + '">' + (en.state == 1 ? 'Сформирована' : (en.state == 2 ? 'Доставка' : (en.state == 3 ? 'Закрыта' : 'Открыта'))) +
                 '</td><td>' + ((new Date(en.firsdate)).toLocaleDateString()) +
-                '<td>' + ((en.idCar) ? ((en.idCar)? en.idCar.name: '') : '') + '</td>'+
+                '<td>' + ((en.idCar) ? ((en.idCar)? en.idCar.name: '') : '') + '</td>' +
                 '</td>' + htmlDistrict +
                 '</td><td  class="packinglist-size">' + ((en.plSize) ? en.plSize : '') + '</td>';
         return html;
