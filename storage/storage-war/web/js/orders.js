@@ -4,15 +4,20 @@ $(document).ready(function () {
     
     $(".button-accept-order-yes").click(function(){
         var orderId = $(this).attr("button-order-id");
-        if (orderId !== "")
+        if (orderId !== ""){
             acceptOrder(orderId);
             getPackinglistsAll();
+        }
     })
     
     $(".button-accept-packinglist-yes").click(function() {
         var packinglistId = $(this).attr("button-packinglist-id");
-        if (packinglistId !== "")
+        if (packinglistId !== ""){
             acceptPackinglist(packinglistId);
+            getOrdersAll();
+        }
+        
+        
     })
     
     //orders
@@ -250,7 +255,6 @@ $(document).ready(function () {
     function addPackinglistsClick() {
         $('.button-accept-packinglist').click(function() {
             packinglistId = $(this).parents("tr").attr('packinglist-id');
-            console.log(packinglistId);
             $(".button-accept-packinglist-yes").attr("button-packinglist-id", packinglistId);
         });
     }

@@ -5,15 +5,19 @@ $(document).ready(function () {
     $('.button-add-pl').click(function(){
         var packinglistId = $(this).attr("button-packinglist-id");
         var carId = $('.select-cars').val();
-        if (packinglistId !== "" && carId !== "")
+        if (packinglistId !== "" && carId !== ""){
             appointCarInPL(packinglistId, carId);
+            getCars();
+        }
         $('.button-default-add').click();
     });
     
     $(".button-return-car").click(function() {
         var carId = $(this).attr("button-car-id");
-        if (carId !== "")
+        if (carId !== ""){
             returnCar(carId);
+            getPackinglistsAll();
+        }
         $('.button-default-return').click();
     })
     

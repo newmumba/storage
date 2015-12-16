@@ -240,6 +240,14 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         if (order.getState() == 1) {
             order.setState(2);
             addOrderInPackinglist(order);
+            List<Goodspositions> gp = (List) order.getGoodspositions();
+            if (!gp.isEmpty()) {
+                for (int i = 0; i < gp.size(); i++) {
+                    Goods good = gp.get(i).getIdGoods();
+                    good.setCount(good.getCount() - gp.get(i).getCount());
+                    em.persist(good);
+                }
+            }
             em.persist(order);
         }
         return findOrdersSent();
@@ -422,6 +430,8 @@ public class StorageSessionBean implements StorageSessionBeanRemote, StorageSess
         if (pl.getState() == 1) {
             pl.setState(2);
             pl.setIdCar(car);
+            car.setState(false);
+            em.persist(car);
             
             List<Orders> orders = pl.getOrders();
             if(orders!= null){
