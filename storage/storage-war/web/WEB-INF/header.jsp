@@ -27,10 +27,6 @@
                         <li><a href="cars.jsp">Машины</a></li>
                         <li><a href="user.jsp">Пользователь</a></li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="login.jsp?#">Войти</a></li>
-                        <li><a href="#">Выйти</a></li>
-                    </ul>
                 </div><!--/.nav-collapse -->
                 
                 
