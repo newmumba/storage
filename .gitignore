@@ -29,3 +29,4 @@ core
 nbproject/*
 !nbproject/project.properties
 !nbproject/project.xml
+!*json-simple-1.1.1.jar
